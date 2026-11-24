@@ -1,4 +1,4 @@
-"""API から本物の DB まで通す結合テスト。演習 6 で書き足していく。"""
+"""API から本物の DB まで通す結合テスト。課題6 で書き足していく。"""
 
 import pytest
 from django.test import Client
