@@ -1,7 +1,5 @@
 # gas — ứng dụng tính tiền gas
 
-> Đây là bản tiếng Việt (nhánh `vi`). Bản tiếng Nhật nằm ở nhánh `main`.
-
 Ứng dụng nhỏ tính tiền gas hằng tháng theo giá thông thường (一般料金, khu vực 東京地区等) của Tokyo Gas, dùng làm đề tài cho bài thực hành test.
 
 ## Đề bài
@@ -28,7 +26,7 @@
 
 Ví dụ 30㎥ thuộc bảng giá B: 1,206.00 + 176.09 × 30 = 6,488.70, tức **6,488 yên**.
 
-> 📌 Đây là giá của kỳ ghi chỉ số tháng 11/2026 (2026年11月検針分), công bố ngày 29/9/2026, lấy về ngày 19/11/2026. Đơn giá thay đổi hằng tháng, nhưng ở đây cố định theo tháng này. Nguồn và ảnh chụp lúc lấy dữ liệu nằm trong [docs/](docs/README.md).
+> 📌 Đây là giá của kỳ ghi chỉ số tháng 11/2026 (2026年11月検針分), công bố ngày 29/9/2026, lấy về ngày 19/11/2026. Đơn giá thay đổi hằng tháng, nhưng ở đây cố định theo tháng này. Nguồn: [tài liệu công bố của Tokyo Gas](https://www.tokyo-gas.co.jp/news/press/20260929-02_01.pdf).
 
 ### Quy tắc nghiệp vụ
 

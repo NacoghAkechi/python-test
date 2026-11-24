@@ -1,7 +1,7 @@
 """Quy tắc của bảng giá (Entities). Chỉ có hàm thuần, không biết gì về Django hay DB.
 
 PRICES là giá thông thường (一般料金, 東京地区等) của Tokyo Gas, kỳ 2026年11月検針分 (công bố 2026-09-29, lấy về 2026-11-19).
-Đơn giá đổi hằng tháng nên cố định theo tháng này. Ảnh chụp lúc lấy: docs/tokyo-gas-2026-11-tariff.png (docs/README.md)
+Đơn giá đổi hằng tháng nên cố định theo tháng này.
 Nguồn: https://www.tokyo-gas.co.jp/news/press/20260929-02_01.pdf
 """
 
