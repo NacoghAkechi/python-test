@@ -1,6 +1,6 @@
-"""今月の請求を作るユースケース（Use Cases）。
+"""Use case lập hóa đơn của tháng này (Use Cases).
 
-外の世界（DB・メール）は Protocol で書いた約束だけを知っていて、Django は知らない。
+Chỉ biết thế giới bên ngoài (DB, mail) qua quy ước viết bằng Protocol, không biết gì về Django.
 """
 
 from dataclasses import dataclass
@@ -13,7 +13,7 @@ from gas.charge import gas_charge
 class Customer:
     id: int
     email: str
-    web_statement: bool  # Web 明細を選んだ人は True、紙の検針票の人は False
+    web_statement: bool  # True: chọn hóa đơn trên web (Web 明細), False: dùng phiếu giấy (検針票)
 
 
 @dataclass(frozen=True)
@@ -46,9 +46,9 @@ def issue_bill(
     bills: BillRepository,
     mailer: Mailer,
 ) -> int:
-    """今月の使用量からガス料金を計算して保存し、請求 ID を返す。
+    """Tính tiền gas từ lượng dùng của tháng này, lưu lại và trả về ID hóa đơn.
 
-    Web 明細の人には、料金のお知らせメールを送る。
+    Người chọn Web 明細 thì được gửi mail báo tiền gas.
     """
     customer = customers.find(customer_id)
     if customer is None:

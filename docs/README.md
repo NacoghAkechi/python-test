@@ -1,17 +1,17 @@
-# 料金の出典
+# Nguồn bảng giá
 
-料金（`src/gas/tariff.py` の `PRICES`）は、東京ガスの一般料金（東京地区等）の **2026 年 11 月検針分** です。2026 年 11 月の検針日までの 1 か月に使ったガスに、この料金がかかります。単位料金は原料費調整で毎月変わるので、今の東京ガスのサイトとは値が違うことがあります。演習では、この月の値に固定しています。
+Bảng giá (`PRICES` trong `src/gas/tariff.py`) là giá thông thường (一般料金, khu vực 東京地区等) của Tokyo Gas cho **kỳ ghi chỉ số tháng 11/2026 (2026年11月検針分)**, tức lượng gas dùng trong khoảng 1 tháng tính đến ngày ghi chỉ số tháng 11/2026. Đơn giá thay đổi hằng tháng theo cơ chế điều chỉnh chi phí nguyên liệu (原料費調整), nên có thể khác với giá đang đăng trên trang của Tokyo Gas. Bài tập cố định ở giá của tháng này.
 
-| 画面 | 元の資料 | 発表 | 取得 |
+| Ảnh chụp | Tài liệu gốc | Công bố | Ngày lấy |
 | --- | --- | --- | --- |
-| [料金表 A〜F](tokyo-gas-2026-11-tariff.png) | [原料費調整制度に基づく2026年11月検針分のガス料金について（東京地区等）](https://www.tokyo-gas.co.jp/news/press/20260929-02_01.pdf) p.1 | 2026-09-29 | 2026-11-19 |
-| [早見表 0〜36㎥](tokyo-gas-2026-11-hayamihyo.png) | [ガス料金早見表（2026年11月検針分）](https://reception.tokyo-gas.co.jp/Ryokin/hayamihyo/ryokin2026111.pdf) p.2 | — | 2026-11-19 |
-| [延滞利息](tokyo-gas-2025-04-late-fee.png) | [ガス料金の算定方法について（2025年4月検針分）](https://reception.tokyo-gas.co.jp/Ryokin/hayamihyo/ryokin2025041.pdf) p.1 | — | 2026-11-19 |
+| [Bảng giá A〜F](tokyo-gas-2026-11-tariff.png) | [原料費調整制度に基づく2026年11月検針分のガス料金について（東京地区等）](https://www.tokyo-gas.co.jp/news/press/20260929-02_01.pdf) tr.1 | 2026-09-29 | 2026-11-19 |
+| [Bảng tra nhanh (早見表) 0〜36㎥](tokyo-gas-2026-11-hayamihyo.png) | [ガス料金早見表（2026年11月検針分）](https://reception.tokyo-gas.co.jp/Ryokin/hayamihyo/ryokin2026111.pdf) tr.2 | — | 2026-11-19 |
+| [Tiền lãi trả chậm (延滞利息)](tokyo-gas-2025-04-late-fee.png) | [ガス料金の算定方法について（2025年4月検針分）](https://reception.tokyo-gas.co.jp/Ryokin/hayamihyo/ryokin2025041.pdf) tr.1 | — | 2026-11-19 |
 
-延滞利息は、演習のために簡単にしてあります。料金表と延滞利息以外のルールは、演習のために決めたもので、東京ガスの実際の決まりとは照らし合わせていません。
+Tiền lãi trả chậm đã được đơn giản hóa cho bài tập. Các quy tắc khác ngoài bảng giá và tiền lãi trả chậm được đặt ra cho bài tập, chưa đối chiếu với quy định thật của Tokyo Gas.
 
-![料金表 A〜F（2026 年 11 月検針分）](tokyo-gas-2026-11-tariff.png)
+![Bảng giá A〜F (kỳ ghi chỉ số tháng 11/2026)](tokyo-gas-2026-11-tariff.png)
 
-![ガス料金早見表 0〜36㎥（2026 年 11 月検針分）](tokyo-gas-2026-11-hayamihyo.png)
+![Bảng tra nhanh 0〜36㎥ (kỳ ghi chỉ số tháng 11/2026)](tokyo-gas-2026-11-hayamihyo.png)
 
-![延滞利息（2025 年 4 月検針分）](tokyo-gas-2025-04-late-fee.png)
+![Tiền lãi trả chậm (kỳ ghi chỉ số tháng 4/2025)](tokyo-gas-2025-04-late-fee.png)

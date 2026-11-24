@@ -1,4 +1,4 @@
-"""内側の層が、外側の層に依存していないことを確かめる。"""
+"""Kiểm tra lớp bên trong không phụ thuộc vào lớp bên ngoài."""
 
 import ast
 from pathlib import Path

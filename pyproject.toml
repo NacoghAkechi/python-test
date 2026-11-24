@@ -16,8 +16,8 @@ DJANGO_SETTINGS_MODULE = "gas.web.settings"
 testpaths = ["tests"]
 addopts = "--strict-markers"
 markers = [
-    "integration: 本物の DB を使う結合テスト",
-    "e2e: HTTP サーバーを立てて、外から通すテスト",
+    "integration: integration test dùng DB thật",
+    "e2e: test dựng HTTP server rồi chạy xuyên suốt từ bên ngoài",
 ]
 
 [tool.mutmut]

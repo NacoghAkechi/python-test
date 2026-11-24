@@ -1,7 +1,7 @@
-"""ガスが止まったことを知らせるユースケース（Use Cases）。
+"""Use case báo gas bị ngắt (Use Cases).
 
-メーターの状態は外部のメーター監視システムに聞き、メールは外部のメールサービスに頼む。
-どちらも Protocol で書いた約束だけを知っている。
+Trạng thái đồng hồ thì hỏi hệ thống giám sát bên ngoài, gửi mail thì nhờ dịch vụ mail bên ngoài.
+Với cả hai, code ở đây chỉ biết quy ước viết bằng Protocol.
 """
 
 from typing import Protocol
@@ -21,7 +21,7 @@ def notify_shutoff(
     meter: MeterClient,
     mailer: ShutoffMailer,
 ) -> int:
-    """メーターがガスを止めていれば、登録した全員にお知らせを送り、送った人数を返す。"""
+    """Nếu đồng hồ đang ngắt gas thì báo cho tất cả người đã đăng ký, rồi trả về số người đã gửi."""
     if not meter.is_shut_off(meter_id):
         return 0
     for email in emails:

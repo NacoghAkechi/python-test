@@ -1,4 +1,4 @@
-"""Protocol の約束を、Django の ORM で満たす（Interface Adapters）。"""
+"""Đáp ứng quy ước Protocol bằng ORM của Django (Interface Adapters)."""
 
 from gas.billing import Bill, Customer
 from gas.web.models import BillRecord, CustomerRecord

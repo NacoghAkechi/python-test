@@ -1,4 +1,4 @@
-"""HTTP とユースケースをつなぐ（Interface Adapters）。業務ルールの判断はしない。"""
+"""Nối HTTP với use case (Interface Adapters). Không phán đoán quy tắc nghiệp vụ."""
 
 import json
 

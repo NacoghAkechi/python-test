@@ -1,10 +1,10 @@
-"""検針のお楽しみ抽選。"""
+"""Bốc thăm khi ghi chỉ số."""
 
 import random
 
 
 def lucky_charge(charge: int) -> int:
-    """抽選に当たったら、今月のガス料金を半額にする。当たる確率は 2 分の 1。"""
+    """Nếu trúng thì giảm nửa tiền gas tháng này. Xác suất trúng là 1/2."""
     if random.random() < 0.5:
         return charge // 2
     return charge

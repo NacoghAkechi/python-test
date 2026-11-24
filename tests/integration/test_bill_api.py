@@ -1,11 +1,11 @@
-"""API から本物の DB まで通す結合テスト。演習 6 で書き足していく。"""
+"""Integration test chạy xuyên suốt từ API đến DB thật. Viết thêm ở bài 6."""
 
 import pytest
 from django.test import Client
 
 from gas.web.models import BillRecord, CustomerRecord
 
-# mailoutbox：メールを送らずに控える。環境によって 5 秒かかるホスト名の問い合わせも省ける
+# mailoutbox: giữ lại mail mà không gửi thật. Cũng tránh được bước tra tên máy có thể mất 5 giây tùy môi trường
 pytestmark = [
     pytest.mark.integration,
     pytest.mark.django_db,

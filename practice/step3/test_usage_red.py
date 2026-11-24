@@ -1,4 +1,4 @@
-"""演習 3 の赤いテスト。ログを読んで、何を直すかを決める。"""
+"""Các test đỏ của bài 3. Đọc log rồi quyết định sửa cái gì."""
 
 import pytest
 

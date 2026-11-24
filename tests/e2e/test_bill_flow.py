@@ -1,4 +1,4 @@
-"""本物の HTTP サーバーを立てて、外から請求を作るテスト。"""
+"""Test dựng HTTP server thật rồi lập hóa đơn từ bên ngoài."""
 
 import json
 from typing import Any
@@ -22,7 +22,7 @@ def post_json(url: str, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         data=json.dumps(payload).encode(),
         headers={"Content-Type": "application/json"},
     )
-    # 社内プロキシを通さず、手元のサーバーに直接つなぐ
+    # Nối thẳng tới server trên máy, không qua proxy nội bộ công ty
     opener = build_opener(ProxyHandler({}))
     with opener.open(request) as response:
         return response.status, json.load(response)

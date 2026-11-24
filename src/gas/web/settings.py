@@ -1,4 +1,4 @@
-"""研修用の最小の設定。本番ではこのまま使わない。"""
+"""Cấu hình tối thiểu cho đào tạo. Không dùng nguyên như vậy cho môi trường thật."""
 
 SECRET_KEY = "insecure-key-for-training-only"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]

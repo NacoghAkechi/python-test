@@ -1,70 +1,70 @@
-# gas — ガス料金アプリ
+# gas — ứng dụng tính tiền gas
 
-> ベトナム語版は `vi` ブランチにあります。
+> Đây là bản tiếng Việt (nhánh `vi`). Bản tiếng Nhật nằm ở nhánh `main`.
 
-東京ガスの一般料金（東京地区等）で、毎月のガス料金を計算する小さなアプリです。テストの演習の題材として使います。
+Ứng dụng nhỏ tính tiền gas hằng tháng theo giá thông thường (一般料金, khu vực 東京地区等) của Tokyo Gas, dùng làm đề tài cho bài thực hành test.
 
-## 題材
+## Đề bài
 
-### アプリがすること
+### Ứng dụng làm gì
 
-1. **検針**: 前回と今回のメーターの指針から、1 か月の使用量（㎥）を出す
-2. **料金表を決める**: 使用量から、料金表 A〜F のどれを使うかを決める
-3. **料金を計算する**: 料金表の基本料金と単位料金から、ガス料金を計算する
-4. **請求を作る**: 請求を保存し、Web 明細の人には料金のお知らせメールを送る
+1. **Ghi chỉ số**: từ chỉ số đồng hồ (指針) lần trước và lần này, tính lượng gas dùng trong 1 tháng (㎥)
+2. **Xác định bảng giá**: từ lượng sử dụng, chọn bảng giá (料金表) A〜F
+3. **Tính tiền**: tính tiền gas từ phí cơ bản (基本料金) và đơn giá (単位料金) của bảng giá đó
+4. **Lập hóa đơn**: lưu hóa đơn, gửi mail báo tiền gas cho người dùng hóa đơn trên web (Web 明細)
 
-### 料金表
+### Bảng giá
 
-| 料金表 | 1 か月の使用量 | 基本料金（円/月） | 単位料金（円/㎥） |
+| Bảng giá | Lượng dùng 1 tháng | Phí cơ bản (yên/tháng) | Đơn giá (yên/㎥) |
 | --- | --- | --- | --- |
 | A | 0〜20㎥ | 909.00 | 190.94 |
 | B | 21〜80㎥ | 1,206.00 | 176.09 |
 | C | 81〜200㎥ | 1,382.00 | 173.89 |
 | D | 201〜500㎥ | 2,042.00 | 170.59 |
 | E | 501〜800㎥ | 6,442.00 | 161.79 |
-| F | 801㎥ 以上 | 12,602.00 | 154.09 |
+| F | từ 801㎥ | 12,602.00 | 154.09 |
 
-**ガス料金 = 基本料金 + 単位料金 × 使用量**（税込、1 円未満は切り捨て）
+**Tiền gas = phí cơ bản + đơn giá × lượng sử dụng** (đã gồm thuế, bỏ phần lẻ dưới 1 yên)
 
-たとえば 30㎥ なら料金表 B なので、1,206.00 + 176.09 × 30 = 6,488.70 で、**6,488 円** です。
+Ví dụ 30㎥ thuộc bảng giá B: 1,206.00 + 176.09 × 30 = 6,488.70, tức **6,488 yên**.
 
-> 📌 2026 年 11 月検針分の値です（2026 年 9 月 29 日発表、2026 年 11 月 19 日取得）。単位料金は毎月変わりますが、この月の値に固定しています。出典と取得したときの画面は [docs/](docs/README.md) にあります。
+> 📌 Đây là giá của kỳ ghi chỉ số tháng 11/2026 (2026年11月検針分), công bố ngày 29/9/2026, lấy về ngày 19/11/2026. Đơn giá thay đổi hằng tháng, nhưng ở đây cố định theo tháng này. Nguồn và ảnh chụp lúc lấy dữ liệu nằm trong [docs/](docs/README.md).
 
-### 業務ルール
+### Quy tắc nghiệp vụ
 
-| ルール | 内容 | ファイル |
+| Quy tắc | Nội dung | File |
 | --- | --- | --- |
-| 使用量 | 今回の指針 − 前回の指針。メーターは 4 桁で、9999㎥ の次は 0㎥ に戻る | `readings.py` |
-| 料金表 | 使用量から A〜F を決める。マイナスの使用量は受け付けない | `tariff.py` |
-| ガス料金 | 上の式で計算する | `charge.py` |
-| 料金の表示 | `6488` と「6,488円」を相互に変換する | `labels.py` |
-| 請求 | `POST /api/bills/` で請求を作る。Web 明細の人にはメールを送り、紙の検針票の人には送らない | `billing.py`・`web/` |
-| ガスが止まったお知らせ | メーターがガスを止めていれば、登録した全員にメールを送る | `notifications.py` |
-| 年末のエコキャンペーン | 検針日が 12 月 1 日〜25 日なら 1,000 円引く。Web 明細の人が 20㎥ 以下に抑えたら、プレゼントを付ける | `campaign.py` |
-| お楽しみ抽選 | 2 分の 1 の確率で、ガス料金が半額になる | `lottery.py` |
-| 延滞利息 | 支払期限日を過ぎた日数が 11 日以上なら、1 日あたり 0.0274% | 演習で作る |
+| Lượng sử dụng | Chỉ số lần này − chỉ số lần trước. Đồng hồ có 4 chữ số, sau 9999㎥ quay về 0㎥ | `readings.py` |
+| Bảng giá | Chọn A〜F theo lượng sử dụng. Không nhận lượng sử dụng âm | `tariff.py` |
+| Tiền gas | Tính theo công thức ở trên | `charge.py` |
+| Hiển thị tiền | Chuyển qua lại giữa `6488` và 「6,488円」 | `labels.py` |
+| Hóa đơn | Lập hóa đơn bằng `POST /api/bills/`. Người dùng Web 明細 thì nhận mail, người dùng phiếu giấy (検針票) thì không | `billing.py`, `web/` |
+| Báo gas bị ngắt | Nếu đồng hồ đã ngắt gas thì gửi mail cho tất cả người đã đăng ký | `notifications.py` |
+| Khuyến mãi tiết kiệm cuối năm | Ngày ghi chỉ số từ 1/12 đến 25/12 thì giảm 1,000 yên. Người dùng Web 明細 chỉ dùng tối đa 20㎥ thì được tặng quà | `campaign.py` |
+| Bốc thăm | Xác suất 1/2 được giảm nửa tiền gas | `lottery.py` |
+| Tiền lãi trả chậm (延滞利息) | Quá hạn thanh toán từ 11 ngày trở lên thì tính 0.0274% mỗi ngày | làm trong bài tập |
 
-料金表と延滞利息は東京ガスの公表資料をもとにしています（延滞利息は簡単にしてあります）。それ以外のルールは、演習のために決めたものです。
+Bảng giá và tiền lãi trả chậm dựa trên tài liệu công bố của Tokyo Gas (tiền lãi trả chậm đã được đơn giản hóa). Các quy tắc còn lại được đặt ra cho bài tập.
 
-## 開発環境
+## Môi trường phát triển
 
-| 道具 | バージョン | 役割 |
+| Công cụ | Phiên bản | Vai trò |
 | --- | --- | --- |
-| Python | 3.14.9（`.python-version` で指定） | 実行環境。uv が用意する |
-| uv | 最新版 | Python とライブラリの管理、コマンドの実行 |
-| Django | 6.1.3 | 請求の API と DB（SQLite） |
-| pytest | 9.2.0 | テストの実行 |
-| pytest-cov | 7.1.0 | カバレッジ |
-| pytest-django | 4.14.0 | Django のテスト |
-| pytest-mock | 3.17.0 | モック |
-| Hypothesis | 6.170.14 | プロパティベーステスト |
-| mutmut | 3.8.1 | ミューテーションテスト |
+| Python | 3.14.9 (chỉ định trong `.python-version`) | Môi trường chạy, do uv chuẩn bị |
+| uv | Bản mới nhất | Quản lý Python và thư viện, chạy lệnh |
+| Django | 6.1.3 | API hóa đơn và DB (SQLite) |
+| pytest | 9.2.0 | Chạy test |
+| pytest-cov | 7.1.0 | Coverage |
+| pytest-django | 4.14.0 | Test Django |
+| pytest-mock | 3.17.0 | Mock |
+| Hypothesis | 6.170.14 | Property-based testing |
+| mutmut | 3.8.1 | Mutation testing |
 
-ライブラリのバージョンは `uv.lock` で固定しています。
+Phiên bản thư viện được cố định trong `uv.lock`.
 
-### uv を入れる
+### Cài uv
 
-`uv --version` でバージョンが表示されれば、この手順は要りません。
+Nếu `uv --version` hiện ra phiên bản thì bỏ qua bước này.
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -72,7 +72,7 @@ source "$HOME/.local/bin/env"
 uv --version
 ```
 
-### Python とライブラリを入れる
+### Cài Python và thư viện
 
 ```bash
 uv sync
@@ -80,32 +80,32 @@ uv run python --version
 uv run pytest
 ```
 
-- `uv sync` は、Python 3.14.9 がなければダウンロードし、`.venv/` を作って `uv.lock` のとおりにライブラリを入れます
-- Python 3.14.9 が見つからないと出たら、`uv self update` で uv を新しくしてからやり直します
-- コマンドは `uv run` を付けて実行します。`.venv` を有効にする必要はありません
-- `uv run pytest` の最後の行が `20 passed` なら、準備完了です
+- `uv sync` tải Python 3.14.9 nếu máy chưa có, tạo `.venv/` và cài thư viện đúng theo `uv.lock`
+- Nếu báo không tìm thấy Python 3.14.9, chạy `uv self update` để cập nhật uv rồi làm lại
+- Chạy lệnh bằng `uv run`, không cần kích hoạt `.venv`
+- Dòng cuối của `uv run pytest` là `20 passed` thì đã chuẩn bị xong
 
-### テストを動かす
+### Chạy test
 
-| コマンド | 内容 |
+| Lệnh | Nội dung |
 | --- | --- |
-| `uv run pytest` | `tests/` のテストをすべて実行する |
-| `uv run pytest tests/unit` | 単体テストだけを実行する |
-| `uv run pytest -m integration` | 結合テストだけを実行する |
-| `uv run pytest -m e2e` | E2E だけを実行する |
-| `uv run pytest --cov=gas --cov-branch --cov-report=term-missing` | カバレッジを測る |
+| `uv run pytest` | Chạy tất cả test trong `tests/` |
+| `uv run pytest tests/unit` | Chỉ chạy unit test |
+| `uv run pytest -m integration` | Chỉ chạy integration test |
+| `uv run pytest -m e2e` | Chỉ chạy E2E |
+| `uv run pytest --cov=gas --cov-branch --cov-report=term-missing` | Đo coverage |
 
-`practice/` には、わざと赤くしたテストが入っています。`uv run pytest` だけでは実行されません。
+Trong `practice/` có các test cố ý để đỏ. `uv run pytest` không chạy các test này.
 
-### mutmut を動かす
+### Chạy mutmut
 
-コードをわざと書き換えて（ミュータント）、テストが落ちるかどうかを調べる道具です。`pyproject.toml` の `[tool.mutmut]` で設定済みで、`campaign.py` だけを対象にしています。
+Công cụ cố ý sửa code (tạo mutant) rồi xem test có fail không. Đã cấu hình sẵn ở `[tool.mutmut]` trong `pyproject.toml`, chỉ nhắm vào `campaign.py`.
 
-| コマンド | 内容 |
+| Lệnh | Nội dung |
 | --- | --- |
-| `uv run mutmut run` | `campaign.py` を書き換えながら、テストを実行する |
-| `uv run mutmut results` | 生き残ったミュータントの一覧を出す |
-| `uv run mutmut show <名前>` | 何を書き換えたのかを見る |
-| `rm -rf mutants` | 前回の結果を消す。全体を測り直す前に実行する |
+| `uv run mutmut run` | Vừa sửa `campaign.py` vừa chạy test |
+| `uv run mutmut results` | Liệt kê các mutant sống sót |
+| `uv run mutmut show <tên>` | Xem mutant đó sửa chỗ nào |
+| `rm -rf mutants` | Xóa kết quả lần trước. Chạy trước khi đo lại toàn bộ |
 
-`uv run mutmut run` の最後の行に `27/27` と出れば、動いています。
+Dòng cuối của `uv run mutmut run` hiện `27/27` là đã chạy được.

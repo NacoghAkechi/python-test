@@ -1,4 +1,4 @@
-"""Protocol の約束を、Django のメール送信で満たす（Interface Adapters）。"""
+"""Đáp ứng quy ước Protocol bằng chức năng gửi mail của Django (Interface Adapters)."""
 
 from django.core.mail import send_mail
 
