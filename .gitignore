@@ -1,0 +1,7 @@
+.venv/
+mutants/
+__pycache__/
+.pytest_cache/
+.hypothesis/
+.coverage
+*.sqlite3
