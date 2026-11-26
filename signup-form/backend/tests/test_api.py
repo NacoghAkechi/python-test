@@ -10,10 +10,10 @@ from accounts.models import User
 from tests.expected_messages import (
     EMAIL_INVALID,
     EMAIL_TAKEN,
-    PASSWORD_NO_UPPER,
-    PREF_NOT_FOUND,
+    PASSWORD_NO_DIGIT,
+    PREF_REQUIRED,
+    USERNAME_LENGTH,
     USERNAME_REQUIRED,
-    USERNAME_TOO_SHORT,
 )
 
 pytestmark = pytest.mark.django_db
@@ -52,12 +52,12 @@ def test_password_is_not_returned(
     ("field", "value", "message"),
     [
         ("username", "", USERNAME_REQUIRED),
-        ("username", "ab", USERNAME_TOO_SHORT),
+        ("username", "ab", USERNAME_LENGTH),
         ("email", "taro", EMAIL_INVALID),
-        ("password", "passw0rd", PASSWORD_NO_UPPER),
-        ("pref", 48, PREF_NOT_FOUND),
+        ("password", "password", PASSWORD_NO_DIGIT),
+        ("pref", 48, PREF_REQUIRED),
     ],
-    ids=["username-empty", "username-ab", "email-taro", "password-passw0rd", "pref-48"],
+    ids=["username-empty", "username-ab", "email-taro", "password-password", "pref-48"],
 )
 def test_invalid_value_returns_400(
     api_client: APIClient,

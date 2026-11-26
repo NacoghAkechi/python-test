@@ -301,7 +301,7 @@ def test_issue_bill_saves_amount_from_gas_charge(
 
 ## Test cho bài form đăng ký người dùng
 
-Thư mục `signup-form/` chứa dữ liệu tỉnh thành và bộ test dùng cho bài form đăng ký người dùng (SignupForm.md). Ứng dụng (Django, React) thì tự làm theo đề bài. Bộ test được cố ý để thiếu và sai một số chỗ.
+Thư mục `signup-form/` chứa dữ liệu tỉnh thành, bộ test và khung Docker dùng cho bài form đăng ký người dùng (SignupForm.md). Ứng dụng (Django, React) thì tự làm theo đề bài. Bộ test được cố ý để thiếu và sai một số chỗ.
 
 ### File sử dụng
 
@@ -310,6 +310,7 @@ Thư mục `signup-form/` chứa dữ liệu tỉnh thành và bộ test dùng c
 | `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
 | Các file trong `signup-form/backend/tests/`, trừ `test_api.py` | `backend/tests/` | ① |
 | `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
+| `signup-form/Dockerfile`, `compose.yaml`, `.dockerignore` | Ngay dưới `signup-form/` | ④ (điền các chỗ `TODO`) |
 
 Bộ test gọi ứng dụng qua các tên dưới đây, nên hãy đặt tên đúng như vậy khi làm ứng dụng.
 
@@ -347,13 +348,12 @@ Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
 3. Có 1 test vẫn pass nhưng chưa kiểm tra hết đặc tả. Đọc test kiểm tra việc lưu mật khẩu, giải thích còn thiếu gì rồi sửa
 4. Thêm các test còn thiếu, viết theo dạng AAA (Arrange, Act, Assert) giống bộ test có sẵn. Với giá trị biên, đưa vào cả giá trị hợp lệ lẫn giá trị bị từ chối
     - username: 3 ký tự (hợp lệ), 150 ký tự (hợp lệ) và 151 ký tự
-    - email: dài quá 254 ký tự, phần trước @ dài quá 64 ký tự, có hai dấu chấm liền nhau
-    - password: không có chữ thường, không có số, 8 ký tự (hợp lệ)
-    - tel: để trống (lưu NULL), có dấu gạch nối, số full-width, 20 ký tự (hợp lệ) và 21 ký tự
+    - email: có hai dấu chấm liền nhau (`taro..yamada@example.com`)
+    - password: để trống, 8 ký tự (hợp lệ)
     - pref: không chọn, mã không tồn tại
     - Trùng: email, thử cả trường hợp chỉ khác chữ hoa/thường
     - Màn hình: khi có lỗi thì giá trị đã nhập được giữ lại nhưng password thì không; màn hình hoàn tất hiện 「登録が完了しました。」
-5. Chạy `uv run pytest --cov`, xem các dòng trong `Missing` là xử lý gì của ứng dụng. Thêm test đi qua các dòng đó cho đến khi `forms.py` và `validators.py` không còn `Missing`
+5. Chạy `uv run pytest --cov`, xem các dòng trong `Missing` là xử lý gì của ứng dụng
 6. Lấy test ở bước 3 làm ví dụ, giải thích vì sao coverage 100% vẫn chưa yên tâm được
 
 ### Test của bài ③: chạy, sửa và thêm
@@ -361,8 +361,14 @@ Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
 1. Đặt `test_api.py` vào `backend/tests/`, chạy `uv run pytest tests/test_api.py`
 2. So các test bị `F` với đề bài (mục 「API を作る」 của bài ③) rồi sửa. Có 1 chỗ sai nằm trong test
 3. Thêm các test còn thiếu theo dạng AAA
-    - Khi `tel` bị bỏ qua, là `""` hoặc `null`: trả về 201 và lưu NULL
     - Trùng username, trùng email chỉ khác chữ hoa/thường
     - Không có CSRF token thì trả về 403 (dùng `APIClient(enforce_csrf_checks=True)`)
     - Method khác POST thì trả về 405
-4. Chạy `uv run pytest --cov` cho đến khi `serializers.py` và `api.py` không còn `Missing`
+4. Chạy `uv run pytest --cov`, xem các dòng trong `Missing` của `serializers.py` và `api.py`
+
+### Bài ④: điền vào khung Docker
+
+1. Copy `Dockerfile`, `compose.yaml`, `.dockerignore` vào ngay dưới thư mục `signup-form/` của mình
+2. Điền các chỗ `TODO` trong `Dockerfile` và `compose.yaml` (mục 「埋めるところ」 trong đề bài có gợi ý)
+3. Khởi động bằng `docker compose up --build`, mở http://localhost:8000/signup/
+4. Ở terminal khác, chạy `docker compose run --rm web uv run pytest` để xác nhận test cũng chạy qua bên trong container

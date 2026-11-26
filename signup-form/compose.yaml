@@ -1,0 +1,25 @@
+# Khung dùng cho bài ④ của form đăng ký người dùng. Hãy điền các chỗ TODO.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: signup
+      POSTGRES_USER: signup
+      POSTGRES_PASSWORD: signup
+    # TODO: gắn volume db-data vào /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U signup -d signup"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  web:
+    build: .
+    # TODO: truyền thông tin kết nối DB cho Django bằng biến môi trường
+    #       (POSTGRES_HOST là db; POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD giống của db)
+    ports:
+      - "8000:8000"
+    # TODO: chỉ khởi động sau khi healthcheck của db qua (depends_on với condition: service_healthy)
+
+volumes:
+  db-data:

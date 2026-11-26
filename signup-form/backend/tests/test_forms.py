@@ -7,13 +7,11 @@ from accounts.models import User
 from tests.expected_messages import (
     EMAIL_INVALID,
     EMAIL_REQUIRED,
-    PASSWORD_NO_LOWER,
-    PASSWORD_REQUIRED,
+    PASSWORD_NO_DIGIT,
     PASSWORD_TOO_SHORT,
-    USERNAME_INVALID,
+    USERNAME_LENGTH,
     USERNAME_REQUIRED,
     USERNAME_TAKEN,
-    USERNAME_TOO_SHORT,
 )
 
 pytestmark = pytest.mark.django_db
@@ -47,23 +45,21 @@ def test_save_stores_user(valid_data: dict[str, object]) -> None:
     ("field", "value", "message"),
     [
         ("username", "", USERNAME_REQUIRED),
-        ("username", "abc", USERNAME_TOO_SHORT),
-        ("username", "taro yamada", USERNAME_INVALID),
+        ("username", "abc", USERNAME_LENGTH),
         ("email", "", EMAIL_REQUIRED),
         ("email", "taro", EMAIL_INVALID),
-        ("password", "", PASSWORD_REQUIRED),
         ("password", "Pass0rd", PASSWORD_TOO_SHORT),
-        ("password", "passw0rd", PASSWORD_NO_LOWER),
+        ("password", "abcd1234", PASSWORD_TOO_SHORT),
+        ("password", "password", PASSWORD_NO_DIGIT),
     ],
     ids=[
         "username-empty",
         "username-abc",
-        "username-with-space",
         "email-empty",
         "email-taro",
-        "password-empty",
         "password-Pass0rd",
-        "password-passw0rd",
+        "password-abcd1234",
+        "password-password",
     ],
 )
 def test_invalid_value_is_rejected(

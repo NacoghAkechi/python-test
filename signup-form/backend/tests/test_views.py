@@ -5,7 +5,7 @@ from django.test import Client
 from pytest_django.asserts import assertContains, assertRedirects
 
 from accounts.models import User
-from tests.expected_messages import USERNAME_TOO_SHORT
+from tests.expected_messages import USERNAME_LENGTH
 
 pytestmark = pytest.mark.django_db
 
@@ -19,7 +19,7 @@ def test_signup_page_shows_form(client: Client) -> None:
 
     # Assert
     assert response.status_code == 200
-    for name in ["username", "email", "password", "tel", "pref"]:
+    for name in ["username", "email", "password", "pref"]:
         assertContains(response, f'name="{name}"')
     assertContains(response, "東京都")
 
@@ -46,5 +46,5 @@ def test_invalid_post_shows_errors_and_saves_nothing(
 
     # Assert
     assert response.status_code == 200
-    assertContains(response, USERNAME_TOO_SHORT)
+    assertContains(response, USERNAME_LENGTH)
     assert not User.objects.exists()
