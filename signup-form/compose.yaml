@@ -1,0 +1,25 @@
+# ユーザー登録フォームの課題④で使う雛形。TODO を埋める。
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: signup
+      POSTGRES_USER: signup
+      POSTGRES_PASSWORD: signup
+    # TODO: ボリューム db-data を /var/lib/postgresql/data につなぐ
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U signup -d signup"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  web:
+    build: .
+    # TODO: Django に、DB の接続先を環境変数で渡す
+    #       （POSTGRES_HOST は db。POSTGRES_DB・POSTGRES_USER・POSTGRES_PASSWORD は db と同じ値）
+    ports:
+      - "8000:8000"
+    # TODO: db の healthcheck が通ってから起動する（depends_on の condition: service_healthy）
+
+volumes:
+  db-data:

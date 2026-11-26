@@ -30,7 +30,6 @@ def valid_data(tokyo: Pref) -> dict[str, object]:
         "username": "taro",
         "email": "taro@example.com",
         "password": "Passw0rd",
-        "tel": "0312345678",
         "pref": tokyo.code,
     }
 

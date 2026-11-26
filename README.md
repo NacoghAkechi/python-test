@@ -301,7 +301,7 @@ def test_issue_bill_saves_amount_from_gas_charge(
 
 ## ユーザー登録フォームのテスト
 
-`signup-form/` には、ユーザー登録フォームの課題（SignupForm.md）で使う、都道府県のデータとテストが入っています。アプリ（Django・React）は、課題の文面に沿って自分で作ります。テストには、わざと足りないところと間違っているところを入れてあります。
+`signup-form/` には、ユーザー登録フォームの課題（SignupForm.md）で使う、都道府県のデータ、テスト、Docker の雛形が入っています。アプリ（Django・React）は、課題の文面に沿って自分で作ります。テストには、わざと足りないところと間違っているところを入れてあります。
 
 ### 使うファイル
 
@@ -310,6 +310,7 @@ def test_issue_bill_saves_amount_from_gas_charge(
 | `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
 | `signup-form/backend/tests/` の、`test_api.py` 以外 | `backend/tests/` | ① |
 | `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
+| `signup-form/Dockerfile`・`compose.yaml`・`.dockerignore` | `signup-form/` の直下 | ④（`TODO` を埋める） |
 
 テストは、次の名前でアプリを使います。アプリは、この名前で作ってください。
 
@@ -347,13 +348,12 @@ show_missing = true
 3. 通っているのに、仕様を確かめきれていないテストが 1 つある。パスワードの保存を確かめているテストを読み、何が足りないかを説明して直す
 4. 足りないテストを足す。配布したテストと同じく AAA（Arrange・Act・Assert）の形で書く。境界の値は、通る値と引っかかる値の両方を入れる
     - username：3 文字（通る）、150 文字（通る）と 151 文字
-    - email：254 文字を超える、@ の前が 64 文字を超える、ドットが続く
-    - password：小文字がない、数字がない、8 文字（通る）
-    - tel：空（NULL で保存される）、ハイフン入り、全角数字、20 文字（通る）と 21 文字
+    - email：ドットが続く（`taro..yamada@example.com`）
+    - password：空、8 文字（通る）
     - pref：選ばれていない、存在しないコード
     - 重複：email。大文字小文字だけが違うものも試す
     - 画面：エラーのときに入力値が残り、password は残らない。完了画面に「登録が完了しました。」と出る
-5. `uv run pytest --cov` を実行し、`Missing` に出た行が、アプリの何の処理かを確かめる。その行を通るテストを足し、`forms.py` と `validators.py` の `Missing` をなくす
+5. `uv run pytest --cov` を実行し、`Missing` に出た行が、アプリの何の処理かを確かめる
 6. カバレッジが 100% でも安心できないのはなぜかを、3 のテストを例に説明する
 
 ### 課題③のテスト：動かして、直して、足す
@@ -361,8 +361,14 @@ show_missing = true
 1. `test_api.py` を `backend/tests/` に入れ、`uv run pytest tests/test_api.py` を実行する
 2. `F` になったテストを、課題の文面（課題③の「API を作る」）と比べて直す。テストの間違いは 1 つある
 3. 足りないテストを、AAA の形で足す
-    - `tel` が省略・`""`・`null` のとき、201 が返り、NULL で保存される
     - username の重複、大文字小文字だけが違う email の重複
     - CSRF トークンがないと 403 が返る（`APIClient(enforce_csrf_checks=True)` を使う）
     - POST 以外は 405 が返る
-4. `uv run pytest --cov` を実行し、`serializers.py` と `api.py` の `Missing` をなくす
+4. `uv run pytest --cov` を実行し、`serializers.py` と `api.py` の `Missing` に出た行を確かめる
+
+### 課題④：Docker の雛形を埋める
+
+1. `Dockerfile`・`compose.yaml`・`.dockerignore` を、自分の `signup-form/` の直下にコピーする
+2. `Dockerfile` と `compose.yaml` の `TODO` を埋める（課題の文面の「埋めるところ」にヒントがある）
+3. `docker compose up --build` で起動し、http://localhost:8000/signup/ を開く
+4. 別のターミナルで `docker compose run --rm web uv run pytest` を実行し、コンテナの中でもテストが通ることを確かめる
