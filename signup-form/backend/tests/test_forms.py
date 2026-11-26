@@ -19,18 +19,25 @@ from tests.expected_messages import (
 pytestmark = pytest.mark.django_db
 
 
-def test_valid_data_passes(valid_data):
+def test_valid_data_passes(valid_data: dict[str, object]) -> None:
+    # Arrange
     form = SignupForm(data=valid_data)
 
-    assert form.is_valid(), form.errors
+    # Act
+    is_valid = form.is_valid()
+
+    # Assert
+    assert is_valid, form.errors
 
 
-def test_save_stores_user(valid_data):
+def test_save_stores_user(valid_data: dict[str, object]) -> None:
+    # Arrange
     form = SignupForm(data=valid_data)
-    assert form.is_valid(), form.errors
 
+    # Act
     form.save()
 
+    # Assert
     user = User.objects.get(username="taro")
     assert user.email == "taro@example.com"
     assert user.password
@@ -59,15 +66,29 @@ def test_save_stores_user(valid_data):
         "password-passw0rd",
     ],
 )
-def test_invalid_value_is_rejected(valid_data, field, value, message):
+def test_invalid_value_is_rejected(
+    valid_data: dict[str, object], field: str, value: str, message: str
+) -> None:
+    # Arrange
     form = SignupForm(data={**valid_data, field: value})
 
-    assert not form.is_valid()
+    # Act
+    is_valid = form.is_valid()
+
+    # Assert
+    assert not is_valid
     assert message in form.errors[field]
 
 
-def test_duplicate_username_is_rejected(valid_data, existing_user):
+def test_duplicate_username_is_rejected(
+    valid_data: dict[str, object], existing_user: User
+) -> None:
+    # Arrange
     form = SignupForm(data={**valid_data, "username": "hanako"})
 
-    assert not form.is_valid()
+    # Act
+    is_valid = form.is_valid()
+
+    # Assert
+    assert not is_valid
     assert USERNAME_TAKEN in form.errors["username"]

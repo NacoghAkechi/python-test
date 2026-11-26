@@ -7,7 +7,7 @@ from accounts.models import Pref
 
 
 @pytest.fixture(scope="session")
-def django_db_setup(django_db_setup, django_db_blocker):
+def django_db_setup(django_db_setup, django_db_blocker) -> None:
     """テスト用の DB を作ったあと、47 都道府県（accounts/fixtures/prefs.json）を 1 回だけ登録する。
 
     pytest-django の django_db_setup を上書きしている。
@@ -18,13 +18,13 @@ def django_db_setup(django_db_setup, django_db_blocker):
 
 
 @pytest.fixture
-def tokyo(db):
+def tokyo(db) -> Pref:
     """東京都（コード 13）。"""
     return Pref.objects.get(code=13)
 
 
 @pytest.fixture
-def valid_data(tokyo):
+def valid_data(tokyo: Pref) -> dict[str, object]:
     """すべてのルールを通る入力。テストでは、1 つの項目だけを変えて使う。"""
     return {
         "username": "taro",
