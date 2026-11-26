@@ -345,7 +345,7 @@ Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
 1. Chạy `uv run pytest`, đọc nguyên nhân của các test bị `E` (ERROR). Viết fixture còn thiếu `existing_user` vào `tests/conftest.py`
 2. Đọc các test bị `F`, so với đề bài để quyết định code hay test sai, rồi sửa. Có 4 chỗ sai nằm trong test
 3. Có 1 test vẫn pass nhưng chưa kiểm tra hết đặc tả. Đọc test kiểm tra việc lưu mật khẩu, giải thích còn thiếu gì rồi sửa
-4. Thêm các test còn thiếu. Với giá trị biên, đưa vào cả giá trị hợp lệ lẫn giá trị bị từ chối
+4. Thêm các test còn thiếu, viết theo dạng AAA (Arrange, Act, Assert) giống bộ test có sẵn. Với giá trị biên, đưa vào cả giá trị hợp lệ lẫn giá trị bị từ chối
     - username: 3 ký tự (hợp lệ), 150 ký tự (hợp lệ) và 151 ký tự
     - email: dài quá 254 ký tự, phần trước @ dài quá 64 ký tự, có hai dấu chấm liền nhau
     - password: không có chữ thường, không có số, 8 ký tự (hợp lệ)
@@ -360,7 +360,7 @@ Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
 
 1. Đặt `test_api.py` vào `backend/tests/`, chạy `uv run pytest tests/test_api.py`
 2. So các test bị `F` với đề bài (mục 「API を作る」 của bài ③) rồi sửa. Có 1 chỗ sai nằm trong test
-3. Thêm các test còn thiếu
+3. Thêm các test còn thiếu theo dạng AAA
     - Khi `tel` bị bỏ qua, là `""` hoặc `null`: trả về 201 và lưu NULL
     - Trùng username, trùng email chỉ khác chữ hoa/thường
     - Không có CSRF token thì trả về 403 (dùng `APIClient(enforce_csrf_checks=True)`)
