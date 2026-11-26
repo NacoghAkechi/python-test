@@ -298,3 +298,71 @@ def test_issue_bill_saves_amount_from_gas_charge(
 
 1. Nếu làm hỏng đơn giá của bảng giá B trong `src/gas/tariff.py` thành `Decimal("170.00")`, test này có fail không? Giải thích lý do
 2. Viết comment review, gồm "vấn đề là gì" và "sửa thế nào"
+
+## Test cho bài form đăng ký người dùng
+
+Thư mục `signup-form/` chứa dữ liệu tỉnh thành và bộ test dùng cho bài form đăng ký người dùng (SignupForm.md). Ứng dụng (Django, React) thì tự làm theo đề bài. Bộ test được cố ý để thiếu và sai một số chỗ.
+
+### File sử dụng
+
+| File | Đặt vào | Dùng ở bài |
+| --- | --- | --- |
+| `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
+| Các file trong `signup-form/backend/tests/`, trừ `test_api.py` | `backend/tests/` | ① |
+| `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
+
+Bộ test gọi ứng dụng qua các tên dưới đây, nên hãy đặt tên đúng như vậy khi làm ứng dụng.
+
+- Model: `accounts.models.User`, `accounts.models.Pref`
+- Form: `accounts.forms.SignupForm`
+- URL: `/signup/`, `/signup/done/`, `/api/signup/`
+- Thông báo lỗi: đúng các câu trong mục 「入力のルール」 của đề bài (`tests/expected_messages.py`)
+
+Chạy lệnh ở thư mục `backend/` của ứng dụng mình làm.
+
+### Chuẩn bị coverage
+
+Cài pytest-cov và thêm cấu hình vào `pyproject.toml`.
+
+```bash
+uv add --dev pytest-cov
+```
+
+```toml
+[tool.coverage.run]
+source = ["accounts"]
+branch = true
+omit = ["accounts/migrations/*"]
+
+[tool.coverage.report]
+show_missing = true
+```
+
+Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
+
+### Test của bài ①: chạy, sửa và thêm
+
+1. Chạy `uv run pytest`, đọc nguyên nhân của các test bị `E` (ERROR). Viết fixture còn thiếu `existing_user` vào `tests/conftest.py`
+2. Đọc các test bị `F`, so với đề bài để quyết định code hay test sai, rồi sửa. Có 4 chỗ sai nằm trong test
+3. Có 1 test vẫn pass nhưng chưa kiểm tra hết đặc tả. Đọc test kiểm tra việc lưu mật khẩu, giải thích còn thiếu gì rồi sửa
+4. Thêm các test còn thiếu. Với giá trị biên, đưa vào cả giá trị hợp lệ lẫn giá trị bị từ chối
+    - username: 3 ký tự (hợp lệ), 150 ký tự (hợp lệ) và 151 ký tự
+    - email: dài quá 254 ký tự, phần trước @ dài quá 64 ký tự, có hai dấu chấm liền nhau
+    - password: không có chữ thường, không có số, 8 ký tự (hợp lệ)
+    - tel: để trống (lưu NULL), có dấu gạch nối, số full-width, 20 ký tự (hợp lệ) và 21 ký tự
+    - pref: không chọn, mã không tồn tại
+    - Trùng: email, thử cả trường hợp chỉ khác chữ hoa/thường
+    - Màn hình: khi có lỗi thì giá trị đã nhập được giữ lại nhưng password thì không; màn hình hoàn tất hiện 「登録が完了しました。」
+5. Chạy `uv run pytest --cov`, xem các dòng trong `Missing` là xử lý gì của ứng dụng. Thêm test đi qua các dòng đó cho đến khi `forms.py` và `validators.py` không còn `Missing`
+6. Lấy test ở bước 3 làm ví dụ, giải thích vì sao coverage 100% vẫn chưa yên tâm được
+
+### Test của bài ③: chạy, sửa và thêm
+
+1. Đặt `test_api.py` vào `backend/tests/`, chạy `uv run pytest tests/test_api.py`
+2. So các test bị `F` với đề bài (mục 「API を作る」 của bài ③) rồi sửa. Có 1 chỗ sai nằm trong test
+3. Thêm các test còn thiếu
+    - Khi `tel` bị bỏ qua, là `""` hoặc `null`: trả về 201 và lưu NULL
+    - Trùng username, trùng email chỉ khác chữ hoa/thường
+    - Không có CSRF token thì trả về 403 (dùng `APIClient(enforce_csrf_checks=True)`)
+    - Method khác POST thì trả về 405
+4. Chạy `uv run pytest --cov` cho đến khi `serializers.py` và `api.py` không còn `Missing`
