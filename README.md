@@ -298,3 +298,71 @@ def test_issue_bill_saves_amount_from_gas_charge(
 
 1. `src/gas/tariff.py` で、料金表 B の単位料金を `Decimal("170.00")` に壊したとき、このテストが落ちるかどうかと、その理由を説明する
 2. レビューコメントを書く。「何が問題か」と「どう直すか」を含める
+
+## ユーザー登録フォームのテスト
+
+`signup-form/` には、ユーザー登録フォームの課題（SignupForm.md）で使う、都道府県のデータとテストが入っています。アプリ（Django・React）は、課題の文面に沿って自分で作ります。テストには、わざと足りないところと間違っているところを入れてあります。
+
+### 使うファイル
+
+| ファイル | 置く場所 | 使う課題 |
+| --- | --- | --- |
+| `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
+| `signup-form/backend/tests/` の、`test_api.py` 以外 | `backend/tests/` | ① |
+| `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
+
+テストは、次の名前でアプリを使います。アプリは、この名前で作ってください。
+
+- モデル：`accounts.models.User`、`accounts.models.Pref`
+- フォーム：`accounts.forms.SignupForm`
+- URL：`/signup/`、`/signup/done/`、`/api/signup/`
+- エラーメッセージ：課題の文面の「入力のルール」の文（`tests/expected_messages.py`）
+
+コマンドは、自分のアプリの `backend/` で実行します。
+
+### カバレッジの準備
+
+pytest-cov を入れ、`pyproject.toml` に設定を足します。
+
+```bash
+uv add --dev pytest-cov
+```
+
+```toml
+[tool.coverage.run]
+source = ["accounts"]
+branch = true
+omit = ["accounts/migrations/*"]
+
+[tool.coverage.report]
+show_missing = true
+```
+
+`uv run pytest --cov` で、テストを実行しながらカバレッジを測れます。
+
+### 課題①のテスト：動かして、直して、足す
+
+1. `uv run pytest` を実行し、`E`（ERROR）になったテストの原因を読む。`tests/conftest.py` に、足りない fixture `existing_user` を書く
+2. `F` になったテストを読み、課題の文面と比べて、アプリとテストのどちらが間違っているかを決めて直す。テストの間違いは 4 つある
+3. 通っているのに、仕様を確かめきれていないテストが 1 つある。パスワードの保存を確かめているテストを読み、何が足りないかを説明して直す
+4. 足りないテストを足す。境界の値は、通る値と引っかかる値の両方を入れる
+    - username：3 文字（通る）、150 文字（通る）と 151 文字
+    - email：254 文字を超える、@ の前が 64 文字を超える、ドットが続く
+    - password：小文字がない、数字がない、8 文字（通る）
+    - tel：空（NULL で保存される）、ハイフン入り、全角数字、20 文字（通る）と 21 文字
+    - pref：選ばれていない、存在しないコード
+    - 重複：email。大文字小文字だけが違うものも試す
+    - 画面：エラーのときに入力値が残り、password は残らない。完了画面に「登録が完了しました。」と出る
+5. `uv run pytest --cov` を実行し、`Missing` に出た行が、アプリの何の処理かを確かめる。その行を通るテストを足し、`forms.py` と `validators.py` の `Missing` をなくす
+6. カバレッジが 100% でも安心できないのはなぜかを、3 のテストを例に説明する
+
+### 課題③のテスト：動かして、直して、足す
+
+1. `test_api.py` を `backend/tests/` に入れ、`uv run pytest tests/test_api.py` を実行する
+2. `F` になったテストを、課題の文面（課題③の「API を作る」）と比べて直す。テストの間違いは 1 つある
+3. 足りないテストを足す
+    - `tel` が省略・`""`・`null` のとき、201 が返り、NULL で保存される
+    - username の重複、大文字小文字だけが違う email の重複
+    - CSRF トークンがないと 403 が返る（`APIClient(enforce_csrf_checks=True)` を使う）
+    - POST 以外は 405 が返る
+4. `uv run pytest --cov` を実行し、`serializers.py` と `api.py` の `Missing` をなくす
