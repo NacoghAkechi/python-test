@@ -49,6 +49,7 @@ def test_password_is_not_returned(api_client, valid_data):
         ("password", "passw0rd", PASSWORD_NO_UPPER),
         ("pref", 48, PREF_NOT_FOUND),
     ],
+    ids=["username-empty", "username-ab", "email-taro", "password-passw0rd", "pref-48"],
 )
 def test_invalid_value_returns_400(api_client, valid_data, field, value, message):
     response = api_client.post(API_URL, {**valid_data, field: value}, format="json")

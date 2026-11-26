@@ -48,6 +48,16 @@ def test_save_stores_user(valid_data):
         ("password", "Pass0rd", PASSWORD_TOO_SHORT),
         ("password", "passw0rd", PASSWORD_NO_LOWER),
     ],
+    ids=[
+        "username-empty",
+        "username-abc",
+        "username-with-space",
+        "email-empty",
+        "email-taro",
+        "password-empty",
+        "password-Pass0rd",
+        "password-passw0rd",
+    ],
 )
 def test_invalid_value_is_rejected(valid_data, field, value, message):
     form = SignupForm(data={**valid_data, field: value})
