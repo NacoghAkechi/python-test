@@ -310,13 +310,15 @@ def test_issue_bill_saves_amount_from_gas_charge(
 | `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
 | `signup-form/backend/tests/` の、`test_api.py` 以外 | `backend/tests/` | ① |
 | `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
-| `signup-form/Dockerfile`・`compose.yaml`・`.dockerignore` | `signup-form/` の直下 | ④（`TODO` を埋める） |
+| `signup-form/compose.yaml` | `signup-form/` の直下 | ④（`TODO` を埋める） |
+| `signup-form/backend/Dockerfile`・`.dockerignore` | `backend/` | ④（`Dockerfile` の `TODO` を埋める） |
+| `signup-form/frontend/Dockerfile`・`.dockerignore` | `frontend/` | ④（`Dockerfile` の `TODO` を埋める） |
 
 テストは、次の名前でアプリを使います。アプリは、この名前で作ってください。
 
 - モデル：`accounts.models.User`、`accounts.models.Pref`
 - フォーム：`accounts.forms.SignupForm`
-- URL：`/signup/`、`/signup/done/`、`/api/signup/`
+- URL：`/signup/`、`/signup/done/`、`/api/prefs/`、`/api/signup/`
 - エラーメッセージ：課題の文面の「入力のルール」の文（`tests/expected_messages.py`）
 
 コマンドは、自分のアプリの `backend/` で実行します。
@@ -361,14 +363,15 @@ show_missing = true
 1. `test_api.py` を `backend/tests/` に入れ、`uv run pytest tests/test_api.py` を実行する
 2. `F` になったテストを、課題の文面（課題③の「API を作る」）と比べて直す。テストの間違いは 1 つある
 3. 足りないテストを、AAA の形で足す
+    - `GET /api/prefs/` が 47 件をコード順に返し、`csrftoken` の cookie を渡す
     - username の重複、大文字小文字だけが違う email の重複
-    - CSRF トークンがないと 403 が返る（`APIClient(enforce_csrf_checks=True)` を使う）
+    - CSRF トークンがないと 403 が返る（`APIClient(enforce_csrf_checks=True)` を使う）。`GET /api/prefs/` で受け取った cookie の値を `X-CSRFToken` ヘッダーで送ると、201 が返る
     - POST 以外は 405 が返る
 4. `uv run pytest --cov` を実行し、`serializers.py` と `api.py` の `Missing` に出た行を確かめる
 
 ### 課題④：Docker の雛形を埋める
 
-1. `Dockerfile`・`compose.yaml`・`.dockerignore` を、自分の `signup-form/` の直下にコピーする
-2. `Dockerfile` と `compose.yaml` の `TODO` を埋める（課題の文面の「埋めるところ」にヒントがある）
-3. `docker compose up --build` で起動し、http://localhost:8000/signup/ を開く
-4. 別のターミナルで `docker compose run --rm web uv run pytest` を実行し、コンテナの中でもテストが通ることを確かめる
+1. `compose.yaml`・`backend/Dockerfile`・`backend/.dockerignore`・`frontend/Dockerfile`・`frontend/.dockerignore` を、自分の `signup-form/` の同じ場所にコピーする
+2. 2 つの `Dockerfile` と `compose.yaml` の `TODO` を埋める（課題の文面の「埋めるところ」にヒントがある）
+3. `docker compose up --build` で起動し、React の画面（http://localhost:5173/）と、①の Django の画面（http://localhost:8000/signup/）を開く
+4. 別のターミナルで `docker compose run --rm backend uv run pytest` を実行し、コンテナの中でもテストが通ることを確かめる

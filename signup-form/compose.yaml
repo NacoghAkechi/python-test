@@ -13,13 +13,21 @@ services:
       timeout: 5s
       retries: 30
 
-  web:
-    build: .
+  backend:
+    build: ./backend
     # TODO: Django に、DB の接続先を環境変数で渡す
     #       （POSTGRES_HOST は db。POSTGRES_DB・POSTGRES_USER・POSTGRES_PASSWORD は db と同じ値）
     ports:
       - "8000:8000"
     # TODO: db の healthcheck が通ってから起動する（depends_on の condition: service_healthy）
+
+  frontend:
+    build: ./frontend
+    # TODO: React の開発サーバーの転送先を、環境変数 API_TARGET で http://backend:8000 にする
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
 volumes:
   db-data:
