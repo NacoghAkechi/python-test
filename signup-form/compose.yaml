@@ -13,13 +13,21 @@ services:
       timeout: 5s
       retries: 30
 
-  web:
-    build: .
+  backend:
+    build: ./backend
     # TODO: truyền thông tin kết nối DB cho Django bằng biến môi trường
     #       (POSTGRES_HOST là db; POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD giống của db)
     ports:
       - "8000:8000"
     # TODO: chỉ khởi động sau khi healthcheck của db qua (depends_on với condition: service_healthy)
+
+  frontend:
+    build: ./frontend
+    # TODO: đặt địa chỉ chuyển tiếp của dev server React thành http://backend:8000 bằng biến môi trường API_TARGET
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
 volumes:
   db-data:

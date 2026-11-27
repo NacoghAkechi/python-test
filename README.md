@@ -310,13 +310,15 @@ Thư mục `signup-form/` chứa dữ liệu tỉnh thành, bộ test và khung 
 | `signup-form/backend/accounts/fixtures/prefs.json` | `backend/accounts/fixtures/` | ① |
 | Các file trong `signup-form/backend/tests/`, trừ `test_api.py` | `backend/tests/` | ① |
 | `signup-form/backend/tests/test_api.py` | `backend/tests/` | ③ |
-| `signup-form/Dockerfile`, `compose.yaml`, `.dockerignore` | Ngay dưới `signup-form/` | ④ (điền các chỗ `TODO`) |
+| `signup-form/compose.yaml` | Ngay dưới `signup-form/` | ④ (điền các chỗ `TODO`) |
+| `signup-form/backend/Dockerfile`, `.dockerignore` | `backend/` | ④ (điền các chỗ `TODO` trong `Dockerfile`) |
+| `signup-form/frontend/Dockerfile`, `.dockerignore` | `frontend/` | ④ (điền các chỗ `TODO` trong `Dockerfile`) |
 
 Bộ test gọi ứng dụng qua các tên dưới đây, nên hãy đặt tên đúng như vậy khi làm ứng dụng.
 
 - Model: `accounts.models.User`, `accounts.models.Pref`
 - Form: `accounts.forms.SignupForm`
-- URL: `/signup/`, `/signup/done/`, `/api/signup/`
+- URL: `/signup/`, `/signup/done/`, `/api/prefs/`, `/api/signup/`
 - Thông báo lỗi: đúng các câu trong mục 「入力のルール」 của đề bài (`tests/expected_messages.py`)
 
 Chạy lệnh ở thư mục `backend/` của ứng dụng mình làm.
@@ -361,14 +363,15 @@ Chạy `uv run pytest --cov` để vừa chạy test vừa đo coverage.
 1. Đặt `test_api.py` vào `backend/tests/`, chạy `uv run pytest tests/test_api.py`
 2. So các test bị `F` với đề bài (mục 「API を作る」 của bài ③) rồi sửa. Có 1 chỗ sai nằm trong test
 3. Thêm các test còn thiếu theo dạng AAA
+    - `GET /api/prefs/` trả về 47 tỉnh theo thứ tự mã, và gửi kèm cookie `csrftoken`
     - Trùng username, trùng email chỉ khác chữ hoa/thường
-    - Không có CSRF token thì trả về 403 (dùng `APIClient(enforce_csrf_checks=True)`)
+    - Không có CSRF token thì trả về 403 (dùng `APIClient(enforce_csrf_checks=True)`). Gửi giá trị cookie nhận từ `GET /api/prefs/` qua header `X-CSRFToken` thì trả về 201
     - Method khác POST thì trả về 405
 4. Chạy `uv run pytest --cov`, xem các dòng trong `Missing` của `serializers.py` và `api.py`
 
 ### Bài ④: điền vào khung Docker
 
-1. Copy `Dockerfile`, `compose.yaml`, `.dockerignore` vào ngay dưới thư mục `signup-form/` của mình
-2. Điền các chỗ `TODO` trong `Dockerfile` và `compose.yaml` (mục 「埋めるところ」 trong đề bài có gợi ý)
-3. Khởi động bằng `docker compose up --build`, mở http://localhost:8000/signup/
-4. Ở terminal khác, chạy `docker compose run --rm web uv run pytest` để xác nhận test cũng chạy qua bên trong container
+1. Copy `compose.yaml`, `backend/Dockerfile`, `backend/.dockerignore`, `frontend/Dockerfile`, `frontend/.dockerignore` vào đúng vị trí tương ứng trong thư mục `signup-form/` của mình
+2. Điền các chỗ `TODO` trong 2 file `Dockerfile` và `compose.yaml` (mục 「埋めるところ」 trong đề bài có gợi ý)
+3. Khởi động bằng `docker compose up --build`, mở màn hình React (http://localhost:5173/) và màn hình Django của bài ① (http://localhost:8000/signup/)
+4. Ở terminal khác, chạy `docker compose run --rm backend uv run pytest` để xác nhận test cũng chạy qua bên trong container
